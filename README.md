@@ -1,0 +1,2 @@
+# k-plugin
+Kustomize plugins
