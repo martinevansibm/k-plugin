@@ -1,0 +1,31 @@
+spec:
+  repo:
+    initContainers:
+      - args:
+          - >-
+            mkdir -p /kustomize/plugin/transformers/sed-transformer && wget -q 
+            https://github.com/martinevansibm/k-plugin/raw/main/plugins/transformers/sed-transformer/sed-transformer
+            -O- | tr -d '\r'
+            >/kustomize/plugin/transformers/sed-transformer/sed-transformer &&
+            chmod 777
+            /kustomize/plugin/transformers/sed-transformer/sed-transformer
+        command:
+          - sh
+          - '-c'
+        image: 'alpine:3.8'
+        name: download-tools
+        volumeMounts:
+          - mountPath: /kustomize
+            name: kustomize
+    volumeMounts:
+      - mountPath: /kustomize
+        name: kustomize
+    volumes:
+      - emptyDir: {}
+        name: kustomize
+  kustomizeBuildOptions: '--enable-alpha-plugins=true'
+  configManagementPlugins: |
+    - name: kustomize-build-with-params
+      generate:
+        command: [ "sh", "-c" ]
+        args: ["kustomize build --enable-alpha-plugins=true" ]
