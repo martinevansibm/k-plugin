@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ArgoCD
+metadata:
+  resourceVersion: '137659'
+  name: openshift-gitops
+spec:
+  repo:
+    volumeMounts:
+      - mountPath: /kustomize/plugin/transformers/sed-transformer
+        name: kustomize
+    volumes:
+      - name: kustomize
+	    configMap:
+          name: plugin-cm
+          defaultMode: 0777
+
+  kustomizeBuildOptions: '--enable-alpha-plugins=true'
